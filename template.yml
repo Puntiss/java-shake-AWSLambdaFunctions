@@ -1,0 +1,149 @@
+# info: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html
+
+#sam deploy --s3-bucket  --stack-name  --capabilities CAPABILITY_IAM
+
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: Servless Application Shake
+
+Globals:
+  Function:
+    Runtime: java17
+    MemorySize: 512
+    Timeout: 25
+    
+Resources:
+
+  # Start Database Definition
+
+  ShakeTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: shake
+      PrimaryKey:
+        Name: id
+        Type: String
+  
+  OrderTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: order
+      PrimaryKey:
+        Name: id
+        Type: String
+        
+  UserTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: user
+      PrimaryKey:
+        Name: id
+        Type: String        
+  
+  # End Database Definition
+  # Start API Definition 
+  
+  ShakeAPI:
+    Type: AWS::Serverless::Api
+    Description: Api Gateway Gestione Shake
+    Properties:
+      Name: shake-api
+      EndpointConfiguration: REGIONAL
+      StageName: SVIL
+      #DefinitionBody:
+        #'Fn::Transform':
+          #Name: 'AWS::Include'
+          #Parameters:
+            #Location: 'api.yml'
+      
+
+  RetrieveAllShakeJava:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      CodeUri: target/shake-product-0.0.1-SNAPSHOT-aws.jar
+      Environment:
+       Variables:
+         spring_cloud_function_definition: getAllShake
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /api/shake/getAllShake
+            Method: get
+            RestApiId:
+              Ref: ShakeAPI
+              
+  CreateOder:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      CodeUri: target/shake-product-0.0.1-SNAPSHOT-aws.jar
+      Environment:
+        Variables:
+          spring_cloud_function_definition: createOrder
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /api/shake/createOrder
+            Method: post
+            RestApiId:
+              Ref: ShakeAPI
+              
+              
+  GetOrderByUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      CodeUri: target/shake-product-0.0.1-SNAPSHOT-aws.jar
+      Environment:
+        Variables:
+          spring_cloud_function_definition: getOrderByUser
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /api/shake/getOrderByUser/{token}
+            Method: get
+            RestApiId:
+              Ref: ShakeAPI
+              
+  Login:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      CodeUri: target/shake-product-0.0.1-SNAPSHOT-aws.jar
+      Environment:
+        Variables:
+          spring_cloud_function_definition: login
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /api/shake/auth/login
+            Method: post
+            RestApiId:
+              Ref: ShakeAPI
+
+  Register:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      CodeUri: target/shake-product-0.0.1-SNAPSHOT-aws.jar
+      Environment:
+        Variables:
+          spring_cloud_function_definition: register
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            Path: /api/shake/auth/register
+            Method: post
+            RestApiId:
+              Ref: ShakeAPI
+  
+              
+
+
+

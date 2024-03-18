@@ -1,0 +1,38 @@
+{
+    "Records": [
+        {
+            "eventVersion": "2.1",
+            "eventSource": "aws:s3",
+            "awsRegion": "us-east-1",
+            "eventTime": "2023-10-09T19:30:26.352Z",
+            "eventName": "ObjectCreated:Put",
+            "userIdentity": {
+                "principalId": "AWS:AIDAYN62XPOMUXS6R2VTV"
+            },
+            "requestParameters": {
+                "sourceIPAddress": "79.54.206.50"
+            },
+            "responseElements": {
+                "x-amz-request-id": "1K5WCN0MXPPNTZHA",
+                "x-amz-id-2": "GGbbZRPSkLl/MYVUrM6S5PShE9CEshrbSpSeEcmoIiaVhQgnoGvSy7VR1zrS5ulDFPZUSRXWRa6xUt/Q+iHMFjvBZj2xdNXB"
+            },
+            "s3": {
+                "s3SchemaVersion": "1.0",
+                "configurationId": "load-product",
+                "bucket": {
+                    "name": "com.appa.product",
+                    "ownerIdentity": {
+                        "principalId": "A35MJ803CXKCBF"
+                    },
+                    "arn": "arn:aws:s3:::com.appa.product"
+                },
+                "object": {
+                    "key": "test.txt",
+                    "size": 18,
+                    "eTag": "b51dc89e75ff897a8ecb611edb4f1d90",
+                    "sequencer": "00652454D2499DEA95"
+                }
+            }
+        }
+    ]
+}
